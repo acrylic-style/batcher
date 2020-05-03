@@ -73,18 +73,31 @@ const arguments = args.slice(2)
   const next = () => {
     if (p === task.run.length) return
     let cmd = task.run[p]
-    const suppress = cmd.startsWith("@")
-    if (suppress) cmd = cmd.replace(/^@(.*)/, '$1')
+    const suppressLog = cmd.startsWith('@')
+    const suppressOutput = cmd.startsWith('@@')
+    if (suppressLog) cmd = cmd.replace(/^@{1,2}(.*)/, '$1')
+    const say = cmd.startsWith('say')
+    if (say) cmd = cmd.replace(/say (.*)/, 'echo $1')
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
-    logger[suppress ? 'debug' : 'info'](`> ${cmd}`)
+    logger[suppressLog ? 'debug' : 'info'](`> ${cmd}`)
     const s = cp.spawn(cmd, { cwd: finalCwd, windowsHide: true, encoding: 'utf-8', shell: true })
-    if (!suppress) {
+    if (!suppressOutput) {
       s.stdout.on('data', data => {
-        process.stdout.write(data.toString())
+        const m = data.toString().replace(/(.*)\n/, '$1')
+        if (say) {
+          logger.info(m)
+        } else {
+          console.log(m)
+        }
       })
       s.stderr.on('data', data => {
-        process.stdout.write(data.toString())
+        const m = data.toString().replace(/(.*)\n/, '$1')
+        if (say) {
+          logger.info(m)
+        } else {
+          console.log(m)
+        }
       })
     }
     s.once('exit', () => {
