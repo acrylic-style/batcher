@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 require('./src/yaml')
-const pwd = require('path').resolve('.')
+const cwd = require('path').resolve('.')
 process.chdir(__dirname)
 const { LoggerFactory } = require('logger.js')
 const logger = LoggerFactory.getLogger('main', 'blue')
@@ -60,9 +60,10 @@ const arguments = args.slice(2)
   const task = target.tasks[taskName]
   if (task === undefined) return logger.warn(`Task '${taskName}' could not be found on '${run}' [${target.name}].`)
   logger.info(`Running task: ${taskName} [${task.name}] in ${run} [${target.name}]`).info(`${task.run.length} command(s) will be run.`)
+  const finalCwd = task.cwd || cwd
   task.run.forEach(cmd => {
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
-    cp.execSync(cmd, { cwd: pwd, windowsHide: true, encoding: 'utf-8' })
+    cp.execSync(cmd, { cwd: finalCwd, windowsHide: true, encoding: 'utf-8' })
   })
 })()
