@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require('./src/yaml')
 const { LoggerFactory } = require('logger.js')
 const logger = LoggerFactory.getLogger('main', 'blue')

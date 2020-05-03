@@ -8,5 +8,8 @@
   "dependencies": {
     "logger.js": "acrylic-style/logger.js",
     "yaml": "^1.9.2"
+  },
+  "bin": {
+    "batcher": "index.js"
   }
 }
