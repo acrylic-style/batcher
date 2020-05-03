@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 require('./src/yaml')
+process.chdir(__dirname)
 const { LoggerFactory } = require('logger.js')
 const logger = LoggerFactory.getLogger('main', 'blue')
 const $ = `${require('os').homedir()}/.batcher`
