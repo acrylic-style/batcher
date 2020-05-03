@@ -20,7 +20,11 @@ const arguments = args.slice(2)
   logger.debug('Loading batches...')
   const files = (await fs.readdir(`${$}/batches`)).filter(s => s.endsWith('.yml')).map(s => s.replace(/(.*)\.yml/, "$1"))
   logger.debug(`Found ${files.length} parsable files`)
-  if (files.length === 0) return logger.error('Found no parsable files! Please create the batch file with the instruction at batches/README.md.')
+  if (files.length === 0) {
+    logger.error('Found no parsable files! Please create the batch file with the instruction at batches/README.md.')
+    logger.error(`The batches directory is located at: ${$}/batcher`)
+    return
+  }
   const files2 = files.filter(s => s.toLowerCase() === run.toLowerCase())
   if (files2.length === 0) return logger.error('You must specify valid batch.')
   const filename = files2[0]
