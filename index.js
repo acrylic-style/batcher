@@ -73,16 +73,20 @@ const arguments = args.slice(2)
   const next = () => {
     if (p === task.run.length) return
     let cmd = task.run[p]
+    const suppress = cmd.startsWith("@")
+    if (suppress) cmd = cmd.replace(/^@(.*)/, '$1')
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
-    logger.info(`> ${cmd}`)
+    logger[suppress ? 'debug' : 'info'](`> ${cmd}`)
     const s = cp.spawn(cmd, { cwd: finalCwd, windowsHide: true, encoding: 'utf-8', shell: true })
-    s.stdout.on('data', data => {
-      process.stdout.write(data.toString())
-    })
-    s.stderr.on('data', data => {
-      process.stdout.write(data.toString())
-    })
+    if (!suppress) {
+      s.stdout.on('data', data => {
+        process.stdout.write(data.toString())
+      })
+      s.stderr.on('data', data => {
+        process.stdout.write(data.toString())
+      })
+    }
     s.once('exit', () => {
       next()
     })
