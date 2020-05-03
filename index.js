@@ -25,6 +25,14 @@ const arguments = args.slice(2)
     logger.error(`The batches directory is located at: ${$}/batcher`)
     return
   }
+  if (run === undefined) {
+    logger.info('You must specify which task to run.')
+    logger.info('Available tasks are:')
+    files.forEach(s => {
+      logger.info(` - ${s}`)
+    })
+    return
+  }
   const files2 = files.filter(s => s.toLowerCase() === run.toLowerCase())
   if (files2.length === 0) return logger.error('You must specify valid batch.')
   const filename = files2[0]
