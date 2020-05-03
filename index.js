@@ -16,12 +16,14 @@ if (process.argv.includes('--debug')) {
   logger.debug('You have turned on the debug logging.')
   delete process.argv[process.argv.indexOf('--debug')]
 }
+logger.debug(`Application directory (configuration): ${cwd}`)
+logger.debug(`Application location: ${__dirname}`)
 const args = process.argv.slice(2)
 const run = args[0]
 const taskName = args[1]
 const arguments = args.slice(2)
 !(async () => {
-  logger.debug('Loading batches...')
+  logger.debug(`Scanning ${$}/batches`)
   const files = (await fs.readdir(`${$}/batches`)).filter(s => s.endsWith('.yml')).map(s => s.replace(/(.*)\.yml/, "$1"))
   logger.debug(`Found ${files.length} parsable files`)
   if (files.length === 0) {
