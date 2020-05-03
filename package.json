@@ -4,5 +4,9 @@
   "description": "batch anything",
   "main": "index.js",
   "author": "acrylic-style",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "logger.js": "acrylic-style/logger.js",
+    "yaml": "^1.9.2"
+  }
 }
