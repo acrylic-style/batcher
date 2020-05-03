@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 require('./src/yaml')
+const pwd = require('path').resolve('.')
 process.chdir(__dirname)
 const { LoggerFactory } = require('logger.js')
 const logger = LoggerFactory.getLogger('main', 'blue')
@@ -62,6 +63,6 @@ const arguments = args.slice(2)
   task.run.forEach(cmd => {
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
-    cp.execSync(cmd, { windowsHide: true, encoding: 'utf-8' })
+    cp.execSync(cmd, { cwd: pwd, windowsHide: true, encoding: 'utf-8' })
   })
 })()
