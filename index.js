@@ -66,11 +66,26 @@ const arguments = args.slice(2)
   }
   const task = target.tasks[taskName]
   if (task === undefined) return logger.warn(`Task '${taskName}' could not be found on '${run}' [${target.name}].`)
+  if (task.run === undefined || task.run.length === 0) return logger.warn(`Task '${taskName}' doesn't have any runnable command.`)
   logger.info(`Running task: ${taskName} [${task.name}] in ${run} [${target.name}]`).info(`${task.run.length} command(s) will be run.`)
   const finalCwd = task.cwd || cwd
-  task.run.forEach(cmd => {
+  let p = 0
+  const next = () => {
+    if (p === task.run.length) return
+    let cmd = task.run[p]
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
-    cp.execSync(cmd, { cwd: finalCwd, windowsHide: true, encoding: 'utf-8' })
-  })
+    const s = cp.spawn(cmd, { cwd: finalCwd, windowsHide: true, encoding: 'utf-8', shell: true })
+    s.stdout.on('data', data => {
+      process.stdout.write(data.toString())
+    })
+    s.stderr.on('data', data => {
+      process.stdout.write(data.toString())
+    })
+    s.once('exit', () => {
+      next()
+    })
+    p++
+  }
+  next()
 })()
