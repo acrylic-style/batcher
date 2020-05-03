@@ -60,6 +60,10 @@ const arguments = args.slice(2)
     })
     return
   }
+  if (target.tasks === undefined) {
+    logger.warn('No runnable task found.')
+    return
+  }
   const task = target.tasks[taskName]
   if (task === undefined) return logger.warn(`Task '${taskName}' could not be found on '${run}' [${target.name}].`)
   logger.info(`Running task: ${taskName} [${task.name}] in ${run} [${target.name}]`).info(`${task.run.length} command(s) will be run.`)
