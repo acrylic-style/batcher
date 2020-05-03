@@ -75,6 +75,7 @@ const arguments = args.slice(2)
     let cmd = task.run[p]
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
+    logger.info(`> ${cmd}`)
     const s = cp.spawn(cmd, { cwd: finalCwd, windowsHide: true, encoding: 'utf-8', shell: true })
     s.stdout.on('data', data => {
       process.stdout.write(data.toString())
