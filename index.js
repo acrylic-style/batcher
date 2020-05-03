@@ -3,9 +3,11 @@
 require('./src/yaml')
 const { LoggerFactory } = require('logger.js')
 const logger = LoggerFactory.getLogger('main', 'blue')
-const $ = __dirname
+const $ = `${require('os').homedir()}/.batcher`
 const cp = require('child_process')
 const _fs = require('fs')
+if (!_fs.existsSync($)) _fs.mkdirSync($)
+if (!_fs.existsSync(`${$}/batches`)) _fs.mkdirSync(`${$}/batches`)
 const fs = _fs.promises
 if (process.argv.includes('--debug')) {
   logger.config(true)
@@ -22,7 +24,7 @@ const arguments = args.slice(2)
   logger.debug(`Found ${files.length} parsable files`)
   if (files.length === 0) {
     logger.error('Found no parsable files! Please create the batch file with the instruction at batches/README.md.')
-    logger.error(`The batches directory is located at: ${$}/batcher`)
+    logger.error(`The batches directory is located at: ${$}/batches`)
     return
   }
   if (run === undefined) {
