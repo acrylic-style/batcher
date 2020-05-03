@@ -1,6 +1,6 @@
 {
   "name": "batcher",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "batch anything",
   "main": "index.js",
   "author": "acrylic-style",
