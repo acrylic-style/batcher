@@ -62,6 +62,6 @@ const arguments = args.slice(2)
   task.run.forEach(cmd => {
     cmd = cmd.replace('$*', arguments.join(' '))
     arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
-    cp.execSync(cmd, { cwd: '.', windowsHide: true, encoding: 'utf-8' })
+    cp.execSync(cmd, { windowsHide: true, encoding: 'utf-8' })
   })
 })()
