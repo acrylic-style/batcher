@@ -60,6 +60,8 @@ const arguments = args.slice(2)
   if (task === undefined) return logger.warn(`Task '${taskName}' could not be found on '${run}' [${target.name}].`)
   logger.info(`Running task: ${taskName} [${task.name}] in ${run} [${target.name}]`).info(`${task.run.length} command(s) will be run.`)
   task.run.forEach(cmd => {
+    cmd = cmd.replace('$*', arguments.join(' '))
+    arguments.forEach((a, i) => cmd = cmd.replace(`\$${i}`, a))
     cp.execSync(cmd, { cwd: '.', windowsHide: true, encoding: 'utf-8' })
   })
 })()
